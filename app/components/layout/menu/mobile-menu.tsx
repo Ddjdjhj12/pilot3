@@ -18,7 +18,7 @@ export function MobileMenu() {
     <Dialog.Root>
       <Dialog.Trigger
         asChild
-        className="relative flex h-8 w-8 items-center justify-center focus-visible:outline-hidden lg:hidden"
+        className="relative flex h-8 w-8 items-center justify-center focus-visible:outline-hidden lg:hidden text-white"
       >
         <MenuTrigger />
       </Dialog.Trigger>
@@ -29,31 +29,31 @@ export function MobileMenu() {
           className={cn([
             "-translate-x-full left-0",
             "data-[state=open]:translate-x-0 data-[state=open]:animate-enter-from-left",
-            "fixed inset-0 z-10 h-screen-no-topbar bg-(--color-header-bg) pt-4 pb-2",
-            "focus-visible:outline-hidden",
-            "uppercase",
+            "fixed inset-0 z-10 h-screen-no-topbar bg-(--color-header-bg)",
+            "pt-4 pb-2 px-4 focus-visible:outline-hidden uppercase text-white",
           ])}
           aria-describedby={undefined}
         >
           <Dialog.Title asChild>
-            <div className="px-4">Menu</div>
+            <div className="text-xl font-semibold tracking-wide mb-3">MENU</div>
           </Dialog.Title>
+
           <Dialog.Close asChild>
-            <XIcon className="fixed top-4 right-4 h-5 w-5" />
+            <XIcon className="fixed top-4 right-4 h-6 w-6 text-white" />
           </Dialog.Close>
-          <div className="mt-4 border-line-subtle border-t" />
-          <div className="py-2">
-            <ScrollArea className="h-[calc(100vh-5rem)]">
-              <div className="space-y-1 px-4">
-                {headerMenu.items.map((item) => (
-                  <CollapsibleMenuItem
-                    key={item.id}
-                    item={item as unknown as SingleMenuItem}
-                  />
-                ))}
-              </div>
-            </ScrollArea>
-          </div>
+
+          <div className="h-px bg-white/20 mb-4" />
+
+          <ScrollArea className="h-[calc(100vh-6rem)]">
+            <ul className="space-y-2">
+              {headerMenu.items.map((item) => (
+                <CollapsibleMenuItem
+                  key={item.id}
+                  item={item as unknown as SingleMenuItem}
+                />
+              ))}
+            </ul>
+          </ScrollArea>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
@@ -66,9 +66,14 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
   if (!items?.length) {
     return (
       <Dialog.Close asChild>
-        <Link to={to} className="py-3">
-          {title}
-        </Link>
+        <li>
+          <Link
+            to={to}
+            className="block w-full py-4 text-lg tracking-wide font-semibold text-white hover:text-white/70 transition-colors"
+          >
+            {title}
+          </Link>
+        </li>
       </Dialog.Close>
     );
   }
@@ -78,24 +83,32 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
       <Collapsible.Trigger asChild>
         <button
           type="button"
-          className='flex w-full items-center justify-between gap-4 py-3 data-[state="open"]:[&>svg]:rotate-90'
+          className="flex w-full items-center justify-between gap-4 py-4 text-lg font-semibold text-white transition-colors data-[state=open]:text-white/80"
         >
-          <span className="uppercase">{title}</span>
-          <CaretRightIcon className="h-4 w-4" />
+          <span>{title}</span>
+          <CaretRightIcon className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-90" />
         </button>
       </Collapsible.Trigger>
-      <Collapsible.Content className="border-gray-300 border-l pl-4">
+
+      <Collapsible.Content className="pl-4 border-l border-white/20 space-y-1">
         {items.map((childItem) => (
-          <CollapsibleMenuItem key={childItem.id} item={childItem} />
+          <li key={childItem.id}>
+            <Dialog.Close asChild>
+              <Link
+                to={childItem.to}
+                className="block w-full py-3 text-base text-white/90 hover:text-white transition-colors"
+              >
+                {childItem.title}
+              </Link>
+            </Dialog.Close>
+          </li>
         ))}
       </Collapsible.Content>
     </Collapsible.Root>
   );
 }
 
-function MenuTrigger(
-  props: Dialog.DialogTriggerProps & { ref?: React.Ref<HTMLButtonElement> },
-) {
+function MenuTrigger(props: Dialog.DialogTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) {
   const { ref, ...rest } = props;
   return (
     <button ref={ref} type="button" {...rest}>
